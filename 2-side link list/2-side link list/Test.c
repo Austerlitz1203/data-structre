@@ -15,6 +15,10 @@ void Test1()
 	LinkListInsert(a, a, 10);
 	LTNode* b = a->next;
 	LinkListErase(a, a->prev);
+
+
+	//LinkListDestory(a);
+	//a = NULL;
 	LinkListPrint(a);
 }
 

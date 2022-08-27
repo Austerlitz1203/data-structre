@@ -98,3 +98,16 @@ void LinkListErase(LTNode* phead, LTNode* pos)
 	Prev->next = Next;
 	Next->prev = Prev;
 }
+
+void LinkListDestory(LTNode* phead)
+{
+	assert(phead);
+	LTNode* cur = phead->next;
+	while (cur != phead)
+	{
+		LTNode* temp = cur->next;
+		free(cur);
+		cur = temp;
+	}
+	//free(phead);
+}
