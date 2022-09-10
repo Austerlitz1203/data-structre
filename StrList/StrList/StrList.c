@@ -1,8 +1,51 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include"StrList.h"
-void StrInit(SN S);//初始化
-int StrEmpty(SN* S);//串是否为空,1为空，0为非空
-int StrCmp(SN S, SN T);
+void StrInit(SN* S)//初始化
+{
+	S->data = NULL;
+	S->size = 0;
+	S->capacity = 0;
+}
+int StrEmpty(SN* S)//串是否为空,1为空，0为非空
+{
+	if (S->data == NULL)
+		return 1;
+	else
+		return 0;
+}
+int StrCmp(SN* S, SN* T)
+{
+	//int len = S->size < T->size ? S->size : T->size;
+	//int i = 0;
+	//for (i = 0;i < len;i++)
+	//{
+	//	if (S->data[i] == T->data[i])
+	//		continue;
+	//	else if (S->data[i] < T->data[i])
+	//		return 1;
+	//	else
+	//		return -1;
+	//}
+	////短的所有字符和长的均相等，长的和短的等长或者比短的长
+	//if (i == len && S->size == T->size)
+	//	return 0;
+	//else if (i == len && S->size < T->size)
+	//	return 1;
+	//else
+	//	return -1;
+
+	//优化版本
+	assert(S && T);
+	while (*(S->data) == *(T->data)) //不等的时候才跳出
+	{
+		if (*S->data == '\0')//如果满足，则两个都是\0，因为只有相等才会进循环
+			return 0;
+		S->data++;
+		T->data++;
+	}
+	return *(S->data) - *(T->data);  
+
+}
 
 
 void find_next(SN* T, int* next)
@@ -43,8 +86,72 @@ int StrIndex(SN *S, SN *T,int pos)//从pos位置开始，寻找子串T的位置（KMP算法）
 	return -1;
 }
 
-void StrInsert(SN* S, int pos, SN* T);//插入子串
-void StrDelete(SN* S, int pos, int len);//删除子串
-void StrDestory(SN* S);
+void StrInsert(SN* S, int pos, SN* T)//在第pos个字符（非下标）的位置插入子串
+{
+	//断言
+	assert(S);
+	assert(T);
+	while (S->capacity - S->size < T->size)//判断空间是否够插入子串
+	{
+		int newcapacity1 = S->capacity == 0 ? 4 : 2 * S->capacity;
+		char* ps = (char*)realloc(S->data, newcapacity1*sizeof(char));
+		//由于这里是realloc，所以S必须StrInit()，不然既没有事先malloc,calloc,realloc，又没有S->data=NULL，直接崩溃了
+		//可以先StrInit(S),然后StrInsert()字符串，pos=1
+		//T不需要StrInit()，所以初始化的时候可以直接写其内容
+		if (!ps)
+		{
+			printf("realloc fail!");
+			exit(-1);
+		}
+		S->data = ps;
+		S->capacity = newcapacity1;
+	}
+
+	if (!S->data)//S->data为空的时候，直接插入
+	{
+		S->data = (char*)malloc((T->size+1)*sizeof(char));
+		for (int i = 0;i < T->size;i++)
+		{
+			S->data[i] = T->data[i];
+		}
+		S->size = T->size;
+		S->data[S->size] = '\0';
+		return;
+	}
+
+	int tail = S->size - 1;
+	for (int i = tail;i >= pos - 1;i--)//S->data非空，先后移再插入
+		S->data[i + T->size] = S->data[i];
+	for (int i = 0;i < T->size;i++)//插入操作
+		S->data[i + pos - 1] = T->data[i];
+	S->size += T->size;
+	S->data[S->size] = '\0';
+	return;
+}
+void StrDelete(SN* S, int pos, int len)//删除子串
+{
+	//断言
+	assert(S);//S为空
+	assert(!StrEmpty(S));//data为空
+	
+	if (S->size <= len)//删除长度比当前字符串还长
+		StrInit(S);
+
+	int head = pos + len;//要移动的起始字符位置(非下标)
+	int tail = S->size;//要移动的结尾字符位置(非下标)
+	for (int i = head;i <= tail;i++)//前移
+		S->data[i - len-1] = S->data[i-1];
+	for (int i = tail - len ;i < S->size;i++)//多的变为0
+		S->data[i] = '\0';
+	S->size -= len;
+	return;
+}
+
+void StrDestory(SN* S)
+{
+	S->size = 0;
+	free(S->data);
+	//free(S);//free()必须是之前malloc，realloc，calloc的空间，和上面realloc一样，所以这里不可以，会崩溃
+}
 
 
