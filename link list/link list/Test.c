@@ -37,6 +37,37 @@ void Test2()
 int main()
 {
 	//Test1();
-	Test2();
+	//Test2();
+
+	//（1）归并
+	//初始化la
+	SLTNode* la = NULL;
+	SListPushBack(&la, 1);
+	SListPushBack(&la, 3);
+	SListPushBack(&la, 6);
+	SListPushBack(&la, 9);
+	SListPushBack(&la, 10);
+
+	//初始化lb
+	SLTNode* lb = NULL;
+	SListPushBack(&lb, 2);
+	SListPushBack(&lb, 3);
+	SListPushBack(&lb, 4);
+	SListPushBack(&lb, 5);
+	SListPushBack(&lb, 6);
+	SListPushBack(&lb, 8);
+	SListPushBack(&lb, 14);
+
+	SLTNode* ret = NULL;
+	merge(la, lb, &ret);
+	SListPrint(ret);
+	printf("\n");
+
+	//（2）正负
+	SLTNode* p1 = NULL;
+	test2(&p1);
+	SListPrint(p1);
+	printf("\n");
+
 	return 0;
 }

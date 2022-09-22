@@ -171,3 +171,78 @@ void SListDestory(SLTNode** phead)
 	}
 	*phead = NULL;
 }
+
+//归并
+void merge(SLTNode* a, SLTNode* b, SLTNode** ret)
+{
+	SLTNode* temp1 = a;
+	SLTNode* temp2 = b;
+	while (temp1 != NULL && temp2 != NULL)
+	{
+		if (temp1->data < temp2->data)
+		{
+			SListPushBack(ret, temp1->data);
+			temp1 = temp1->next;
+		}
+		else
+		{
+			SListPushBack(ret, temp2->data);
+			temp2 = temp2->next;
+		}
+	}
+	if (temp1)//temp2归并完了
+	{
+		while (temp1)
+		{
+			SListPushBack(ret, temp1->data);
+			temp1 = temp1->next;
+		}
+	}
+	else//temp1归并完了
+	{
+		while (temp2)
+		{
+			SListPushBack(ret, temp2->data);
+			temp2 = temp2->next;
+		}
+	}
+	return;
+}
+
+//正负分开，负数在前面，正数在后面，相对位置不变
+void test2(SLTNode** a)
+{
+	//输入数据
+	int x = 0;
+	for (int i = 0;i < N;i++)
+	{
+		scanf("%d", &x);
+		SListPushBack(a, x);
+	}
+	//操作，arr存储数据
+	int count = 0;
+	SLTDataType arr[N] = { 0 };
+	SLTNode* temp = *a;
+	while (temp)
+	{
+		if (temp->data < 0)
+			arr[count++] = temp->data;
+		temp = temp->next;
+	}
+	temp = *a;
+	while (temp)
+	{
+		if (temp->data > 0)
+			arr[count++] = temp->data;
+		temp = temp->next;
+	}
+	//重新赋值
+	count = 0;
+	temp = *a;
+	while (temp)
+	{
+		temp->data = arr[count++];
+		temp = temp->next;
+	}
+	return;
+}
