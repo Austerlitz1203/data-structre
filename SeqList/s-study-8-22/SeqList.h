@@ -15,13 +15,19 @@ typedef struct SeqList
 }SL;
 
 //接口函数，命名风格更着STL走的
+//打印
 void SeqListPrint(SL* ps);
+//初始化
 void SeqListInit(SL* ps);
+//尾插
 void SeqListPushBack(SL* ps, SLDataType x);
+//尾删
 void SeqListPopBack(SL* ps);
+//头插
 void SeqListPushFront(SL* ps, SLDataType x);
+//头删
 void SeqListPopFront(SL* ps);
-
+//检查容量是否足够，不够则扩容
 void SeqListCheck(SL* ps);
 //找到指定数据，找到了返回下标，没找到返回-1
 int SeqListFind(SL* ps, SLDataType x);
@@ -29,6 +35,19 @@ int SeqListFind(SL* ps, SLDataType x);
 void SeqListInsert(SL* ps,int pos, SLDataType x);
 //删除pos位置的数据
 void SeqListDelete(SL* ps, int pos);
+
+
+//归并
+void gb(SL* ps1, SL* ps2);
+//两个集合的交集
+void Intersection(SL* ps1, SL* ps2);
+//两个集合的并集
+void Merge(SL* ps1, SL* ps2);
+//两个集合的差集
+void Minus(SL* ps1, SL* ps2);
+
+
+
 
 
 
