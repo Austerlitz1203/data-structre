@@ -11,11 +11,17 @@ typedef struct SListNode
 	struct SListNode* next;
 }SLTNode;
 
+//打印
 void SListPrint(SLTNode* phead);
+//创建新的单元
 SLTNode* SListBuySLTNode(SLTDataType x);
+//头插
 void SListPushFront(SLTNode** phead,SLTDataType x);
+//尾插
 void SListPushBack(SLTNode** phead, SLTDataType x);
+//头删
 void SListPopFront(SLTNode** phead);
+//尾删
 void SListPopBack(SLTNode** phead);
 //查询数据
 SLTNode* SListFind(SLTNode* phead, SLTDataType x);
