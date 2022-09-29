@@ -18,3 +18,13 @@ void PrevOrder(BTNode* root);
 void InOrder(BTNode* root);
 //后序遍历
 void PostOrder(BTNode* root);
+//层序遍历
+void LeafSort(BTNode*);
+//总结点个数，三种方法
+int LeafSize1(BTNode* root);
+
+void LeafSize2(BTNode* root, int* size);
+
+int LeafSize3(BTNode* root);
+//叶子节点个数
+int TreeLeafSize(BTNode* root);
