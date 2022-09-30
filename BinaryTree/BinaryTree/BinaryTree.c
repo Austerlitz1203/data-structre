@@ -86,7 +86,7 @@ void LeafSort(BTNode* root)
 //所有节点个数，三种方法
 //int LeafSize1(BTNode* root)
 //{
-//	static int size = 0;
+//	static int size = 0;//全局变量
 //	if (!root)
 //		return;
 //	if (root)
@@ -118,4 +118,38 @@ int TreeLeafSize(BTNode* root)
 	if (root->left == NULL && root->right == NULL) //叶子返回1
 		return 1;
 	return    TreeLeafSize(root->left) + TreeLeafSize(root->right);
+}
+
+//求二叉树深度
+int TreeDepth(BTNode* root)
+{
+	if (root == NULL)
+		return 0;
+	int left=TreeDepth(root->left);
+	int right=TreeDepth(root->right);
+
+	return left > right ? left + 1 : right + 1;
+}
+
+//给一个前序读取的二叉树数据，还原二叉树
+BTNode* CreatTree(char* a,int* pi)
+{
+	//'#'代表NULL
+	if (a[*pi]=='#')
+	{
+		(*pi)++;
+		return NULL;
+	}
+	BTNode* root = (BTNode*)malloc(sizeof(BTNode));
+	if (root == NULL)
+	{
+		exit(-1);
+		return;
+	}
+	root->data = a[*pi];
+	++(*pi);
+	root->left = CreatTree(a, pi);//生成左子树
+	root->right = CreatTree(a, pi);//生成右子树
+	
+	return root;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include<stdio.h>
 #include<stdlib.h>
+
 typedef char BTDataType;
 
 typedef struct BinaryTreeNode
@@ -28,3 +29,7 @@ void LeafSize2(BTNode* root, int* size);
 int LeafSize3(BTNode* root);
 //叶子节点个数
 int TreeLeafSize(BTNode* root);
+//深度
+int TreeDepth(BTNode* root);
+//给一个前序读取的二叉树数据，还原二叉树
+BTNode* CreatTree(BTNode* root, int* pi);
