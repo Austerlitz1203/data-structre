@@ -80,7 +80,7 @@ void Swap(int* x, int* y)
 }
 
 //向下调整算法，时间复杂度 log2^N（2为敌，N代表元素个数）
-//此算法前提是，根节点的左子树和右子树都是堆
+//此算法前提是，左子树和右子树都是堆
 //所以在排序的时候，不能直接使用向下调整算法，要从下往上使用此算法
 void AdjustDown(int* p,int size,int root)
 {
@@ -139,6 +139,212 @@ void HeapSort(int *p,int size)
 		end--;
 	}
 }
+
+
+//快速排序
+//方法1、挖坑法
+//但是单纯这样的算法无法排序，所以采用分治的思想。
+//void QuickSort(int* p, int size)
+//{
+//	int* begin =p;
+//	int* end = p + size - 1;
+//	int* pit = begin;//坑位
+//	int temp = *begin;//
+//	while (begin < end)
+//	{
+//		while (begin < end && *end >= temp)//这里也要begin<end 假设 2  4  5 ，begin指向4，end指向5，那么--，然后end指向
+//		{                                  //4，*end>3,end--,然后end指向2了，所以错位了，不行的，4应该是相遇处
+//			end--;
+//		}
+//		*pit=*end;
+//		pit = end;
+//
+//		while (begin < end && *begin <= temp)
+//		{
+//			begin++;
+//		}
+//		*pit = *begin;
+//		pit = begin;
+//	}
+//	*begin = temp;
+//}
+
+//时间复杂度N*log(2^N)
+//最好的情况是每次都二分
+//最坏的情况是有序的情况下
+//所以为了避免最坏的情况，用三数取中法确定temp
+int GetMidIndex(int* a, int* left, int* right)
+{
+	int* mid = left + (right - left) / 2;
+	if (*left < *mid)
+	{
+		if (*mid < *right)
+		{
+			return mid;
+		}
+		if (*left > *right)
+		{
+			return left;
+		}
+		else
+			return right;
+	}
+	else//  *mid<*left
+	{
+		if (*left < *right)
+		{
+			return left;
+		}
+		if (*right < *mid)
+		{
+			return mid;
+		}
+		else
+			return right;
+	}
+}
+
+void QuickSort(int* p, int* left,int* right)
+{
+	if (left > right)//递归终止条件
+	{
+		return;
+	}
+	//用三数取中法要把取到的数和首元素交换
+	int* Index = GetMidIndex(p, left, right);
+	Swap(left,Index);
+
+	int* begin = left;
+	int* end = right;
+	int* pit = begin;
+	int temp = *begin;
+	while (begin < end)
+	{
+		while (begin < end && *end >= temp)
+		{                                  
+			end--;
+		}
+		*pit = *end;
+		pit = end;
+
+		while (begin < end && *begin <= temp)
+		{
+			begin++;
+		}
+		*pit = *begin;
+		pit = begin;
+	}
+	*begin = temp;
+	pit = begin;
+	//现在区间被分为了 [left,pit-1] pit [pit+1,right]
+	//但是在这里如果直接递归的话，到最后只剩下比如10个数据，那么要递归很多很多次，不如最后的数据直接用其他办法排序
+	//小区间优化法：
+	if (pit - 1 - left > 10)
+	{
+		QuickSort(p, left, pit - 1);
+	}
+	else
+		InsertSort(left, pit - 1 - left + 1);//左区间开始插入排序
+	if (right - pit - 1 > 10)
+	{
+		QuickSort(p, pit + 1, right);
+	}
+	else
+		InsertSort(pit+1, right - pit - 1 + 1);//右区间开始插入排序
+}
+//这种方法不需要像法2一样，最后left=right的时候去判断指向的那个值和*pit的大小关系，因为最后的情况下，指向的内容
+//本身就是一个坑， 坑里面的内容早就被复制到上一个坑了，所以直接把*pit放进去就好
+//而整个数组首位，即*pit，一开始就是一个坑，直接填内容，所以也不需要像法2，担心最后的时候，首位没有交换
+
+
+
+//方法2：挖坑法2
+//区别就是，两个指针，左边的遇到比*pit大的停下，右边遇到比*pit小的停下，交换两个数字，直到两个指针相等
+void QuickSort2(int* p, int* left, int* right)
+{
+	if (left >= right)//递归终止条件
+		return;
+
+	int* index = GetMidIndex(p, left, right);
+	Swap(index, left);
+
+	int* begin = left;
+	int* end = right;
+	int* pit = begin;
+	while (begin < end)
+	{
+		while (begin < end && *begin <= *pit)//“=”的原因：如果遇到 5 3 5 8 9 0  7 6 5 8这种情况，然后left指向第一个5
+		{                                    //right指向最后一个5，然后没有“=”,那么循环不会进入，begin和end指向
+			begin++;                         //的内容一直无限循环交换，陷入死循环
+		}
+		while (begin < end && *end >= *pit)
+		{
+			end--;
+		}
+		Swap(begin, end);
+	}
+
+	//这里必须要这样判断，英文如果到这种情况： 3 2 0 1 8 4 9 7 6 5 ，然后begin和end都指向8，那么此时要交换3和8，
+	//这个时候，8>3,不可以这样，所以应该要交换3和8前面一个，然后begin指向的位置--（因为后面用的begin不是end）
+	if (*begin < *pit)
+		Swap(pit, begin);//交换相遇处的和开始的
+	else
+	{
+		Swap(pit, begin - 1);
+		begin--;
+	}
+
+	//被分成了     [left,begin -1] begin [begin+1,right]
+	if (begin - 1 - left + 1 > 10)
+	{
+		QuickSort2(p, left, begin - 1);
+	}
+	else
+		InsertSort(left, begin - 1 - left + 1);
+	if (right - begin - 1 + 1 > 10)
+	{
+		QuickSort2(p, begin + 1, right);
+	}
+	else
+		InsertSort(begin + 1, right - begin - 1 + 1);
+}
+
+//方法3：左右指针法
+//思想：两个指针prev，cur，然后cur每次都要++，碰到比*pit小的，那么prev++，然后交换两个数字
+void QuickSort3(int* p, int* left, int* right)
+{
+	int* index = GetMidIndex(p, left, right);
+	Swap(index, left);
+
+	int* prev = left;
+	int* cur = left + 1;
+	int* pit = left;
+
+	while (cur <= right)
+	{
+		//只要cur指向的比*pit小，prev就会++，确保prev经过的都是比*pit小的
+		if (*cur < *pit //巧妙之处在于：6 8 2 3 0 ，prev指向6，cur指向8，此时*cur>*pit,那么&&左边就是0，不会执行右边，prev也就不会++
+			&& ++prev !=cur)//++prev==cur的情况下，那么就没有必要交换，因为两个一样
+		{
+			Swap(prev, cur);
+		}
+		cur++;
+	}
+	Swap(pit, prev);
+	//现在分成了[left,prev-1] prev [prev+1,right]
+	if (prev - 1 - left + 1 > 10)
+	{
+		QuickSort3(p, left, prev - 1);
+	}
+	else
+		InsertSort(left, prev - 1 - left + 1);
+	if (right - prev - 1 + 1 > 10)
+	{
+		QuickSort3(p, prev + 1, right);
+	}
+	else
+		InsertSort(prev + 1, right - prev - 1 + 1);
+}
 int main()
 {
 	//选择排序test
@@ -152,6 +358,15 @@ int main()
 	//HeapSort(arr, 10);
 	//Print(arr, 10);
 
+	//快速排序
+	//int arr[] = { 3,5,2,7,8,6,1,9,4,0 };
+	////QuickSort1(arr, arr, arr + 9);
+	////QuickSort2(arr, arr, arr + 9);
+	//QuickSort3(arr, arr,arr+9);
+	//Print(arr, 10);
+
 	//
+
+
 	return 0;
 }
