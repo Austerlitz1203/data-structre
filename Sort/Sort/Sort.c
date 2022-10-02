@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
-
+#include"stack.h"
 void Print(int *p,int n)
 {
 	for (int i = 0;i < n;i++)
@@ -173,7 +173,7 @@ void HeapSort(int *p,int size)
 //最好的情况是每次都二分
 //最坏的情况是有序的情况下
 //所以为了避免最坏的情况，用三数取中法确定temp
-int GetMidIndex(int* a, int* left, int* right)
+int* GetMidIndex(int* a, int* left, int* right)
 {
 	int* mid = left + (right - left) / 2;
 	if (*left < *mid)
@@ -345,6 +345,117 @@ void QuickSort3(int* p, int* left, int* right)
 	else
 		InsertSort(prev + 1, right - prev - 1 + 1);
 }
+
+
+//归并排序
+//也是分治的思想
+void MergeSort(int *p,int left,int right,int *ret)
+{
+	if (left >= right)
+		return;
+
+	int mid = (left + right) >> 1;
+	//此时被分为 [left,mid]  [mid+1,right]
+	MergeSort(p, left, mid, ret);
+	MergeSort(p, mid + 1, right, ret);//既然递归了，就得有返回条件
+
+	//开始排序
+	int begin1 = left,  end1 = mid;
+	int begin2 = mid + 1, end2 = right;
+	int index = left;//index表示这次递归中要排序的开始数据的下标
+	while (begin1 <= end1 && begin2 <= end2)//两个都满足的情况下才进行排序
+	{
+		if (p[begin1] < p[begin2])
+		{
+			ret[index++] = p[begin1++];
+		}
+		else
+			ret[index++] = p[begin2++];
+	}
+    //有一组有剩余的情况	
+	while (begin1 <= end1)
+	{
+		ret[index++] = p[begin1++];
+	}
+	while (begin2 <= end2)
+	{
+		ret[index++] = p[begin2++];
+	}
+	//ret只是暂时存放，最后还要放回p里面，才是排序完成
+	for (int i = left;i <= right;i++)
+	{
+		p[i] = ret[i];
+	}
+
+}
+
+//递归在极端情况下会导致栈溢出
+//递归改非递归：1、直接改循环（简单）  2、借助数据结构的栈模拟递归过程（复杂一点）
+// 
+//快排的非递归排序
+int PartSort(int* p, int left, int right)
+{
+	int *temp=GetMidIndex(p, p + left, p + right);
+	Swap(temp, p+left);//之前一直出错，就是这里交换的是p和temp，应该交换p+left，每次快排区间的第一个值
+
+	int begin = left;
+	int end = right;
+	int pit = begin;
+	int temp1 = p[left];//要比较的值，是每次比较区间的首位，而不是整个数组的首位
+	while (begin < end)
+	{
+		while (begin < end && p[end] >= temp1)
+		{
+			end--;
+		}
+		p[pit] = p[end];
+		pit = end;
+
+		while (begin < end && p[begin] <= temp1)
+		{
+			begin++;
+		}
+		p[pit] = p[begin];
+		pit = begin;
+	}
+	pit = begin;
+	p[pit] = temp1;
+
+	return pit;
+}
+
+void QuickSortNoR(int*p,int n)
+{
+	ST st;
+	StackInit(&st);
+	StackPush(&st,n-1);
+	StackPush(&st, 0);
+
+	while (!StackEmpty(&st))
+	{
+		int left = StackTop(&st);
+		StackPop(&st);
+		int right = StackTop(&st);
+		StackPop(&st);
+		int KeyIndex=PartSort(p, left, right);//一方面，排序，另一方面，找到当此排序的那个数的位置
+		
+		//[left KeyIndex-1] KeyIndex [KeyIndex+1,right]
+
+		if (KeyIndex + 1 < right)
+		{
+			StackPush(&st, right);
+			StackPush(&st, KeyIndex + 1);
+		}
+
+		if (KeyIndex - 1 > left)
+		{
+			StackPush(&st, KeyIndex - 1);
+			StackPush(&st, left);
+		}
+	}
+}
+
+
 int main()
 {
 	//选择排序test
@@ -365,8 +476,17 @@ int main()
 	//QuickSort3(arr, arr,arr+9);
 	//Print(arr, 10);
 
+	//归并排序
+	//int arr[] = { 3,5,2,7,8,6,1,9,4,0,100,99,88};
+	//int size = sizeof(arr) / sizeof(arr[0]);
+	//int* ret = (int*)malloc(size * sizeof(int));
+	//MergeSort(arr, 0, size-1, ret);
+	//Print(arr, size);
+
 	//
-
-
+	int arr[] = { 3,5,2,7,8,6,1,9,4,0 };
+	QuickSortNoR(arr,10);
+	Print(arr, 10);
 	return 0;
+
 }
