@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
+#include<time.h>
+#include<stdlib.h>
 #include"stack.h"
 void Print(int *p,int n)
 {
@@ -347,7 +349,7 @@ void QuickSort3(int* p, int* left, int* right)
 }
 
 
-//归并排序
+//归并排序 O(n*log2^n)
 //也是分治的思想
 void MergeSort(int *p,int left,int right,int *ret)
 {
@@ -455,9 +457,163 @@ void QuickSortNoR(int*p,int n)
 	}
 }
 
+//归并排序非递归
+void MergeSortNoR(int* p, int n)
+{
+	int* temp = (int*)malloc(sizeof(int)*n);
+	if (temp == NULL)
+	{
+		printf("malloc fail!");
+		exit(-1);
+	}
+	int gap = 1;//gap表示每一次归并，一组数据的数据个数
+
+	while (gap < n)
+	{
+		for (int i = 0;i < n;i += 2 * gap)
+		{
+			// [i,i+gap-1] [i+gap,i+2*gap-1]  [i+2*gap ……
+			
+			int begin1 =  i,  end1 =  i + gap - 1;
+			int begin2 = i + gap, end2 = i + 2 * gap - 1;
+
+			//右半区间不存在，这个时候前面都排完了，然后左半区间本来就是有序的，所以进行下一轮即可
+			if (begin2 >= n )
+			{
+				break;
+			}
+			//左半区间八个值，但是右半区间值少于八个
+			if (end2 >= n)
+			{
+				end2 = n - 1;
+			}
+			//左半区间不够gap个，这个不够gap区间的内容本来就是有序的，所以不用拷回去，直接拷贝到前一个end2的内容就可以
+			//必须要是拷贝到end2,因为上面几行end2可能被修正过，右半区间少了，不能拷贝到i+2*gap-1的内容
+			 
+			int index = i;//temp这个数组要存的内容的下标
+			//开始归并
+			while (begin1 <= end1 && begin2 <= end2)
+			{
+				if (p[begin1] <= p[begin2])
+				{
+					temp[index++] = p[begin1++];
+				}
+				else
+				{
+					temp[index++] = p[begin2++];
+				}
+			}
+			while (begin1 <= end1)
+			{
+				temp[index++] = p[begin1++];
+			}
+			while (begin2 <= end2)
+			{
+				temp[index++] = p[begin2++];
+			}
+
+			for (int j = i;j <= end2;j++)
+			{
+				p[j] = temp[j];
+			}
+		}
+		gap *= 2;
+	}
+	free(temp);
+}
+
+//测试各种排序的性能
+void TestOP()
+{
+	srand(time(0));
+	const int N = 1000000;
+	int* a1 = (int*)malloc(N * sizeof(int));
+	int* a2 = (int*)malloc(N * sizeof(int));
+	int* a3 = (int*)malloc(N * sizeof(int));
+	int* a4 = (int*)malloc(N * sizeof(int));
+	int* a5 = (int*)malloc(N * sizeof(int));
+	int* a6 = (int*)malloc(N * sizeof(int));
+	int* a7 = (int*)malloc(N * sizeof(int));
+	int* a8 = (int*)malloc(N * sizeof(int));
+	int* a9 = (int*)malloc(N * sizeof(int));
+
+	for (int i = 0;i < N;i++)
+	{
+		a1[i] = rand();
+		//a1[i]=i;
+		a2[i] = a1[i];
+		a3[i] = a1[i];
+		a4[i] = a1[i];
+		a5[i] = a1[i];
+		a6[i] = a1[i];
+		a7[i] = a1[i];
+		a8[i] = a1[i];
+		a9[i] = a1[i];
+	}
+
+	int begin1 = clock();
+	//InsertSort(a1, N);
+	int end1 = clock();
+
+	int begin2 = clock();
+	ShellSort(a2, N);
+	int end2 = clock();
+
+	int begin3 = clock();
+	HeapSort(a3, N);
+	int end3 = clock();
+
+	int begin4 = clock();
+	QuickSort(a4, a4+0,a4+N-1);
+	int end4 = clock();
+
+	int begin5 = clock();
+	QuickSort2(a5, a5 + 0, a5 + N - 1);
+	int end5 = clock();
+
+	int begin6 = clock();
+	QuickSort3(a6, a6 + 0, a6 + N - 1);
+	int end6 = clock();
+
+	int* temp1 = (int*)malloc(N * sizeof(int));
+	int begin7 = clock();
+	MergeSort(a7, 0, N - 1, temp1);
+	int end7 = clock();
+
+	int begin8 = clock();
+	QuickSortNoR(a8, N);
+	int end8 = clock();
+
+	int begin9 = clock();
+	MergeSortNoR(a9, N);
+	int end9 = clock();
+
+
+	printf("InsertSort:%d\n", end1 - begin1);
+	printf("ShellSort:%d\n", end2 - begin2);
+	printf("HeapSort:%d\n", end3 - begin3);
+	printf("QuickSort:%d\n", end4 - begin4);
+	printf("QuickSort2:%d\n", end5 - begin5);
+	printf("QuickSort3:%d\n", end6 - begin6);
+	printf("MergeSort:%d\n", end7 - begin7);
+	printf("QuickSortNoR:%d\n", end8 - begin8);
+	printf("MergeSortNoR:%d\n", end9 - begin9);
+
+	//free(a1);
+	free(a2);
+	free(a3);
+	free(a4);
+	free(a5);
+	free(a6);
+	free(a7);
+	free(a8);
+	free(a9);
+}
 
 int main()
 {
+	TestOP();
+
 	//选择排序test
 	//int arr[10] = { 10,45,23,3,67,87,55,4,66,59 };
 	//InsertSort(arr, 10);
@@ -483,10 +639,15 @@ int main()
 	//MergeSort(arr, 0, size-1, ret);
 	//Print(arr, size);
 
-	//
-	int arr[] = { 3,5,2,7,8,6,1,9,4,0 };
-	QuickSortNoR(arr,10);
-	Print(arr, 10);
-	return 0;
+	//快速排序非递归
+	//int arr[] = { 3,5,2,7,8,6,1,9,4,0 };
+	//QuickSortNoR(arr,10);
+	//Print(arr, 10);
 
+	//归并排序非递归
+	//int arr[] = { 3,5,2,7,8,6,1,9 ,4,5,11};
+	//MergeSortNoR(arr, 11);
+	//Print(arr, 11);
+
+	return 0;
 }
