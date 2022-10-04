@@ -46,8 +46,3 @@ void Merge(SL* ps1, SL* ps2);
 //两个集合的差集
 void Minus(SL* ps1, SL* ps2);
 
-
-
-
-
-

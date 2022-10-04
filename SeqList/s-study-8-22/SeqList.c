@@ -33,7 +33,6 @@ void SeqListCheck(SL* ps)
         ps->a = tmp;
         ps->capacity = newcapacity;
     }
-
 }
 
 void SeqListPushBack(SL* ps, SLDataType x)
@@ -47,9 +46,10 @@ void SeqListPushBack(SL* ps, SLDataType x)
 void SeqListPopBack(SL* ps)
 {
     assert(ps);
-    if (ps->size >= 0)
+    if (ps->size > 0)
         ps->size--;
 }
+
 void SeqListPushFront(SL* ps, SLDataType x)
 {
     assert(ps);
@@ -65,6 +65,11 @@ void SeqListPushFront(SL* ps, SLDataType x)
 void SeqListPopFront(SL* ps)
 {
     assert(ps);
+    if (ps->size == 0)
+    {
+        printf("数据删除完了！");
+        return;
+    }
     for (int i = 1;i < ps->size;i++)
     {
         ps->a[i - 1] = ps->a[i];
@@ -175,7 +180,6 @@ void  Merge(SL* ps1, SL* ps2)
         printf("%d ", ret[i]);
     printf("\n");
     return ret;
-
 }
 
 //差集
