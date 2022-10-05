@@ -3,6 +3,7 @@
 #include<stdlib.h>
 #include<assert.h>
 #include<stdbool.h>
+#define N 10
 
 typedef int STDataType;
 
@@ -12,6 +13,7 @@ typedef struct Stack
 	int top;
 	int capacity;
 }ST;
+
 //初始化
 void StackInit(ST* ps);
 //销毁栈
@@ -27,3 +29,7 @@ int StackSize(ST* ps);
 //栈是否为空，1位空，0为非空
 bool StackEmpty(ST* ps);
 
+//
+
+//1到N依次入栈，给一个序列，判断是否为正确出栈序列
+bool IsOutStack(int arr[N]);

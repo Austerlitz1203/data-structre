@@ -62,3 +62,35 @@ bool StackEmpty(ST* ps)
 	else
 		return 0;
 }
+
+
+
+
+bool IsOutStack(int arr[N])
+{
+	ST stack;
+	StackInit(&stack);
+	int n = 1,count=0;//n代表的是1-N的数值，count代表arr数组的下标
+	StackPush(&stack, n++);//压栈
+	while (count<N)
+	{
+		STDataType element = StackTop(&stack);
+		if (element == arr[count])//栈顶元素等于数组中的当前值
+		{
+			StackPop(&stack);
+			count++;
+		}
+		else
+			StackPush(&stack, n++);//压栈
+
+		//比如第一次输入1，那么第一次循环结束之后，无这个语句则栈为空，无法比较
+		if (StackEmpty(&stack))
+		    StackPush(&stack,n++);
+	}
+	if (count == N)
+	{
+		return 1;
+	}
+	else
+		return 0;
+}

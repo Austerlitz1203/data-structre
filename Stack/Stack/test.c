@@ -22,8 +22,19 @@ void Test1()
 	}
 }
 
+Test2()
+{
+	int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	if (IsOutStack(a))
+		printf("是正确的出栈序列！\n");
+	else
+		printf("不是正确的出栈序列！\n");
+
+}
 int main()
 {
-	Test1();
+	//Test1();
+
+	Test2();
 	return 0;
 }
