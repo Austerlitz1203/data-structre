@@ -11,6 +11,7 @@ void SListPrint(SLTNode* phead)
 		printf("%d->", (*temp).data);
 		temp = (*temp).next;
 	}
+	printf("\n");
 
 }
 
@@ -56,7 +57,6 @@ void SListPushBack(SLTNode** phead, SLTDataType x)
 		}
 		temp->next = newnode;
 	}
-
 }
 
 void SListPopFront(SLTNode** phead)
@@ -144,7 +144,6 @@ void SListErase(SLTNode** phead, SLTNode* pos)
 	if (pos == *phead)
 	{
 		*phead =pos->next;
-		free(pos);
 	}
 	else
 	{
@@ -155,6 +154,7 @@ void SListErase(SLTNode** phead, SLTNode* pos)
 		}
 		prev->next = pos->next;
 	}
+	free(pos);
 }
 void SListDestory(SLTNode** phead)
 {

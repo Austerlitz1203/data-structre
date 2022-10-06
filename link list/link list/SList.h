@@ -5,6 +5,7 @@
 #include<assert.h>
 #define N 10
 typedef int SLTDataType;
+
 typedef struct SListNode
 {
 	SLTDataType data;
@@ -31,3 +32,8 @@ void SListInsert(SLTNode** phead, SLTNode* pos, SLTDataType x);
 void SListErase(SLTNode** phead, SLTNode* pos);
 //清空链表
 void SListDestory(SLTNode** phead);
+
+//归并
+void merge(SLTNode* a, SLTNode* b, SLTNode** ret);
+//正负分离
+void test2(SLTNode** a);
