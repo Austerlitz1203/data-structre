@@ -15,9 +15,10 @@ void Test2()
 	StrInit(&S1);
 	SN T1 = { "abcac",5,8 };
 	StrInsert(&S1, 1, &S2);//由于是realloc，所以S1必须StrInit()之后再插入想要的内容
+	//printf("%s\n", S1.data);
 
 	StrInsert(&S1, 2, &T1);
-	StrDestory(&S1);
+	//StrDestory(&S1);
 	printf("%s\n", S1.data);
 }
 
@@ -50,11 +51,11 @@ int main()
 	//Test1();
 
 	//验证插入子串
-	//Test2();
+	Test2();
 
 	//验证删除子串
 	//Test3();
 
 	//验证StrLen
-	Test4();
+	//Test4();
 }

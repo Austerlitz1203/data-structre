@@ -91,7 +91,21 @@ void StrInsert(SN* S, int pos, SN* T)//在第pos个字符（非下标）的位置插入子串
 	//断言
 	assert(S);
 	assert(T);
-	while (S->capacity - S->size < T->size)//判断空间是否够插入子串
+
+	if (!S->data)//S->data为空的时候，直接插入
+	{
+		S->data = (char*)malloc((T->size + 1) * sizeof(char));
+		for (int i = 0;i < T->size;i++)
+		{
+			S->data[i] = T->data[i];
+		}
+		S->size = T->size;
+		S->data[S->size] = '\0';
+		return;
+	}
+
+	//S->data非空 ，判断是否扩容，然后插入
+	while ((S->capacity - S->size) < T->size)//判断空间是否够插入子串
 	{
 		int newcapacity1 = S->capacity == 0 ? 4 : 2 * S->capacity;
 		char* ps = (char*)realloc(S->data, newcapacity1*sizeof(char));
@@ -107,17 +121,6 @@ void StrInsert(SN* S, int pos, SN* T)//在第pos个字符（非下标）的位置插入子串
 		S->capacity = newcapacity1;
 	}
 
-	if (!S->data)//S->data为空的时候，直接插入
-	{
-		S->data = (char*)malloc((T->size+1)*sizeof(char));
-		for (int i = 0;i < T->size;i++)
-		{
-			S->data[i] = T->data[i];
-		}
-		S->size = T->size;
-		S->data[S->size] = '\0';
-		return;
-	}
 
 	int tail = S->size - 1;
 	for (int i = tail;i >= pos - 1;i--)//S->data非空，先后移再插入

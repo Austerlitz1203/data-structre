@@ -54,7 +54,6 @@ QDataType QueueFront(Queue* pq)
 	assert(pq);
 	assert(!QueueEmpty(pq));
 	return pq->head->data;
-
 }
 QDataType QueueBack(Queue* pq)
 {

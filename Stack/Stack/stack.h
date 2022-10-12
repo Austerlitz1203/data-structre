@@ -10,8 +10,8 @@ typedef int STDataType;
 typedef struct Stack
 {
 	STDataType* data;
-	int top;
-	int capacity;
+	int top;      //已有的数据个数
+	int capacity; //容量
 }ST;
 
 //初始化
