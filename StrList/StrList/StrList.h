@@ -13,12 +13,13 @@ typedef struct StrNode
 //初始化
 void StrInit(SN* S);
 //串是否为空,1为空，0为非空
-int StrEmpty(SN *S);
-int StrCmp(SN *S, SN *T);
+int StrEmpty(SN* S);
+//串的比较
+int StrCmp(SN* S, SN* T);
 //next[]的创建
 void find_next(SN* T, int* next);
 //KMP算法寻找子串T的位置
-int StrIndex(SN* S, SN* T,int pos);
+int StrIndex(SN* S, SN* T, int pos);
 //插入子串
 void StrInsert(SN* S, int pos, SN* T);
 //删除子串

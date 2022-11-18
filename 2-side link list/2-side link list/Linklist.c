@@ -36,7 +36,6 @@ void LinkListPushFront(LTNode* phead, LTDataType x)
 	newnode->prev = phead;
 	newnode->next = next;
 	next->prev = newnode;
-
 }
 void LinkListPopFront(LTNode* phead)
 {
@@ -45,7 +44,7 @@ void LinkListPopFront(LTNode* phead)
 	LTNode* pphead = phead;
 	LTNode* Nnext = phead->next->next;
 	LTNode* next = phead->next;
-	
+
 	//É¾³ý²Ù×÷
 	pphead->next = Nnext;
 	Nnext->prev = pphead;

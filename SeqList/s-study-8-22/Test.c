@@ -82,7 +82,7 @@ int main()
 
 	//SeqListTest();
 	//SeqListTest2();
-	//SeqListTest3();
-	SeqListTest4();
+	SeqListTest3();
+	//SeqListTest4();
 	return 0;
 }

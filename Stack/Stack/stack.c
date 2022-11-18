@@ -5,7 +5,15 @@
 void StackInit(ST* ps)
 {
 	assert(ps);
-	ps->data = NULL;
+	//ps->data = NULL;
+	//ps->capacity = ps->top = 0;
+
+	ps->data = (STDataType*)malloc(sizeof(STDataType) * 4);
+	if (ps->data == NULL)
+	{
+		perror("malloc fail!");
+	}
+
 	ps->capacity = ps->top = 0;
 }
 void StackDestory(ST* ps)
@@ -22,7 +30,7 @@ void StackPush(ST* ps, STDataType x)
 	{
 		int newcapacity = ps->capacity == 0 ? 4 : ps->capacity * 2;
 
-		STDataType* temp = (STDataType*)realloc(ps->data,newcapacity*sizeof(STDataType));
+		STDataType* temp = (STDataType*)realloc(ps->data, newcapacity * sizeof(STDataType));
 		if (temp == NULL)
 		{
 			printf("realloc fail!\n");
@@ -45,7 +53,7 @@ STDataType StackTop(ST* ps)
 {
 	assert(ps);
 	assert(!StackEmpty(ps));
-	return ps->data[ps->top-1];
+	return ps->data[ps->top - 1];
 }
 int StackSize(ST* ps)
 {
@@ -55,12 +63,8 @@ int StackSize(ST* ps)
 bool StackEmpty(ST* ps)
 {
 	assert(ps);
-	if (ps->top == 0)
-	{
-		return 1;
-	}
-	else
-		return 0;
+
+	return ps->top == 0;
 }
 
 
@@ -70,9 +74,9 @@ bool IsOutStack(int arr[N])
 {
 	ST stack;
 	StackInit(&stack);
-	int n = 1,count=0;//n代表的是1-N的数值，count代表arr数组的下标
+	int n = 1, count = 0;//n代表的是1-N的数值，count代表arr数组的下标
 	StackPush(&stack, n++);//压栈
-	while (count<N)
+	while (count < N)
 	{
 		STDataType element = StackTop(&stack);
 		if (element == arr[count])//栈顶元素等于数组中的当前值
@@ -85,7 +89,7 @@ bool IsOutStack(int arr[N])
 
 		//比如第一次输入1，那么第一次循环结束之后，无这个语句则栈为空，无法比较
 		if (StackEmpty(&stack))
-		    StackPush(&stack,n++);
+			StackPush(&stack, n++);
 	}
 	if (count == N)
 	{

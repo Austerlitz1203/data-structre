@@ -15,6 +15,7 @@ void Test2()
 	StrInit(&S1);
 	SN T1 = { "abcac",5,8 };
 	StrInsert(&S1, 1, &S2);//由于是realloc，所以S1必须StrInit()之后再插入想要的内容
+	S1.capacity = S2.capacity;
 	//printf("%s\n", S1.data);
 
 	StrInsert(&S1, 2, &T1);
@@ -56,6 +57,6 @@ int main()
 	//验证删除子串
 	//Test3();
 
-	//验证StrLen
+	//验证StrCmp
 	//Test4();
 }

@@ -25,3 +25,7 @@ void LinkListErase(LTNode* phead, LTNode* pos);
 //严格来讲只有插入和删除即可，因为头插就是插入到第一个数据前一个，尾插就是插入到哨兵位前一个
 //头删就是删除第一个数据，尾删就是删除哨兵位的前一个
 void LinkListDestory(LTNode* phead);
+
+
+
+
