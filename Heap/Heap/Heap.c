@@ -30,7 +30,7 @@ void HeapPush(HP* php, HeapDataType x)
 
 	php->a[php->size] = x;
 	php->size++;
-	AdjustUp(php, php->size - 1);
+	AdjustUp(php->a, php->size - 1);
 }
 
 
@@ -52,15 +52,15 @@ void Swap(HeapDataType* a, HeapDataType* b)
 }
 
 //向上调整
-void AdjustUp(HP* php, int child)
+void AdjustUp(HeapDataType* a, int child)
 {
-	assert(php);
+	assert(a);
 	int parent = (child - 1) / 2;
 	while (child > 0)
 	{
-		if (php->a[parent] < php->a[child])
+		if (a[parent] < a[child])
 		{
-			Swap(&php->a[child], &php->a[parent]);
+			Swap(&a[child], &a[parent]);
 			child = parent;
 			parent = (child - 1) / 2;
 		}
@@ -81,19 +81,19 @@ void Print(HP* php)
 }
 
 //向下调整
-void AdjustDown(HP* php, int parent)
+void AdjustDown(HeapDataType* a, int n, int parent)
 {
-	assert(php);
+	assert(a);
 	int child = parent * 2 + 1;  // 这里和链表里的长链表、短链表有异曲同工之妙，只不过这里只需要用到大的孩子
-	while (child < php->size)
+	while (child < n)
 	{
-		if (php->a[child] < php->a[child + 1] && child + 1 < php->size)   //这里child+1要<php->size ，不可以=，因为数据个数是比下标大1
+		if (a[child] > a[child + 1] && child + 1 < n)   //这里child+1要<php->size ，不可以=，因为数据个数是比下标大1
 		{
 			child++;
 		}
-		if (php->a[parent] < php->a[child])
+		if (a[parent] > a[child])
 		{
-			Swap(&php->a[child], &php->a[parent]);
+			Swap(&a[child], &a[parent]);
 			parent = child;
 			child = parent * 2 + 1;
 		}
@@ -110,12 +110,72 @@ void HeapPop(HP* php)
 	assert(php->size > 0);
 	php->a[0] = php->a[php->size - 1];
 	php->size--;
-	AdjustDown(php, 0);
+	AdjustDown(php->a, php->size, 0);
 }
 
 HeapDataType HeapTop(HP* php)
 {
+	assert(php);
+	assert(!php->a);
+	return php->a[0];
+}
+
+void HeapCreat(HP* php, HeapDataType* a, int len)
+{
+	assert(php);
+	assert(a);
+	php->a = (HeapDataType*)malloc(sizeof(HeapDataType) * len);
+	if (php->a == NULL)
+	{
+		perror("malloc fail::");
+		exit(-1);
+	}
+	memcpy(php->a, a, sizeof(HeapDataType) * len);
+	php->size = php->capacity = len;
+
+	for (int i = (len - 1 - 1) / 2;i >= 0;i--)
+	{
+		AdjustDown(php->a, php->size, i);
+	}
 
 }
-int HeapSize(HP* php);
-bool HeapEmpty(HP* php);
+void HeapSort(HeapDataType* a, int n)
+{
+	//排序先建大堆还是小堆，先建大堆，因为如果小堆，比如找到了第一个最小的，找第二小的要重新建堆，很麻烦
+	//但是如果大堆，找到最大的，和最后一个交换，然后向上调整 第 n-1 个，就很方便
+
+	//向上调整,时间复杂度是 N*log(N)
+	// 每层节点少，调整次数少，节点多，调整次数多，且除了根节点，都要调整。
+	//for (int i = 1;i < n;i++)
+	//{
+	//	AdjustUp(a, i);
+	//}
+
+	//向下调整, 时间复杂度是 N
+	// 每层节点数量多，调整次数少，节点数量少，调整次数多。且跳过最后一层，接近一半的节点不要调整。
+	for (int i = (n - 1 - 1) / 2;i >= 0;i--)
+	{
+		AdjustDown(a, n, i);
+	}
+	int end = n - 1;
+	while (end > 0)
+	{
+		Swap(&a[0], &a[end]);
+		AdjustDown(a, end, 0);
+		end--;
+
+	}
+
+}
+
+int HeapSize(HP* php)
+{
+	assert(php);
+	return php->size;
+}
+
+bool HeapEmpty(HP* php)
+{
+	assert(php);
+	return php->size == 0;
+}

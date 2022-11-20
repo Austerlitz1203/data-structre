@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<assert.h>
 #include<stdbool.h>
-
+#include<string.h>
 
 typedef int HeapDataType;
 
@@ -23,10 +23,12 @@ void HeapPop(HP* php);
 //销毁
 void HeapDestory(HP* php);
 //向上调整
-void AdjustUp(HP* php, int child);
-void AdjustDown(HP* php);
+void AdjustUp(HeapDataType* a, int child);
+void AdjustDown(HeapDataType* a, int n);
 //建堆
 void HeapCreat(HP* php, HeapDataType* a, int len);
+//
+void HeapSort(HeapDataType* a, int n);
 
 void Print(HP* php);
 //取堆顶元素
