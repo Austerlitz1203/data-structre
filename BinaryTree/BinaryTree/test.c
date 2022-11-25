@@ -37,7 +37,7 @@ test1()
 	LeafSort(a);
 	printf("\n");
 	int count = 0;
-	LeafSize2(a,&count);
+	LeafSize2(a, &count);
 	printf("%d ", count);
 	printf("\n");
 	printf("%d ", LeafSize3(a));
@@ -48,16 +48,31 @@ test1()
 }
 test2()
 {
-	char a[]="abc##de#g##f###";
+	char a[] = "abc##de#g##f###";
 	int i = 0;
 	BTNode* temp = CreatTree(a, &i);
 	PrevOrder(temp);
 }
+
+test3()
+{
+	char a[] = "abc##de#g##f###";
+	int i = 0;
+	BTNode* temp = CreatTree(a, &i);
+	printf("交换前：");
+	PrevOrder(temp);
+	ReChange(temp);
+	printf("\n交换后：");
+	PrevOrder(temp);
+	printf("\n");
+}
+
 int main()
 {
 	//test();//测试前中后序遍历
 	//test1();//测试广度优先遍历、节点数、叶子节点数、深度
-	test2();//测试根据前序遍历的数据，生成二叉树
+	//test2();//测试根据前序遍历的数据，生成二叉树
+	test3();
 	return 0;
 }
 
