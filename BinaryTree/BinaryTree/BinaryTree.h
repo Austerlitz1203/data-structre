@@ -42,3 +42,7 @@ void ReChange(BTNode* root);
 BTNode* TreeFind(BTNode* root, BTDataType x);
 //是否为unival树
 bool isUnivaldTree(BTNode* root);
+//是否为完全二叉树
+bool TreeComplete(BTNode* root);
+//销毁
+void TreeDestory(BTNode* root);

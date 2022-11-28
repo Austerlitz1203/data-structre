@@ -127,7 +127,6 @@ int TreeLeafSize(BTNode* root)
 int TreeKLevelSize(BTNode* root, int k)
 {
 
-
 }
 
 
@@ -206,4 +205,54 @@ bool isUnivaldTree(BTNode* root)
 		return false;
 	return isUnivaldTree(root->left) && isUnivaldTree(root->right);
 
+}
+
+bool TreeComplete(BTNode* root)
+{
+	assert(root);
+	//创建一个队列
+	Queue p;
+	QueueInit(&p);
+	if (root)
+		QueuePush(&p, root);
+	while (!QueueEmpty(&p))
+	{
+		BTNode* front = QueueFront(&p);
+		QueuePop(&p);
+		if (front == NULL)  //出到空
+			break;
+		else
+		{
+			QueuePush(&p, front->left);
+			QueuePush(&p, front->right);
+		}
+	}
+
+	//出到空之后，如果后面全是空，那就是完全二叉树
+	while (!QueueEmpty(&p))
+	{
+		BTNode* front = QueueFront(&p);
+		QueuePop(&p);
+		if (front != NULL)
+		{
+			QueueDestory(&p);
+			return false;
+		}
+	}
+
+	QueueDestory(&p);
+	return true;
+
+}
+
+
+void TreeDestory(BTNode* root)
+{
+	if (root == NULL)
+		return;
+	TreeDestory(root->left);
+	TreeDestory(root->right);
+	free(root);
+	//后序来是比较好的，先销毁左右子树，再销毁自己。
+	//整个递归是一层一层下去，然后从最下面free，直到根节点
 }
