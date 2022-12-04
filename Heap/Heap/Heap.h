@@ -28,9 +28,9 @@ void AdjustUp(HeapDataType* a, int child);
 void AdjustDown(HeapDataType* a, int n);
 //½¨¶Ñ
 void HeapCreat(HP* php, HeapDataType* a, int len);
-//
+//¶ÑÅÅÐò
 void HeapSort(HeapDataType* a, int n);
-
+//´òÓ¡
 void Print(HP* php);
 //È¡¶Ñ¶¥ÔªËØ
 HeapDataType HeapTop(HP* php);

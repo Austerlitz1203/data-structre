@@ -91,6 +91,7 @@ void AdjustDown(HeapDataType* a, int n, int parent)
 		{
 			child++;
 		}
+
 		if (a[parent] > a[child])
 		{
 			Swap(&a[child], &a[parent]);

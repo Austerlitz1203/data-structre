@@ -103,8 +103,8 @@ void TopK2()
 int main()
 {
 	//Test1();
-	//Test2();
+	Test2();
 	//TopK();
-	TopK2();
+	//TopK2();
 	return 0;
 }
