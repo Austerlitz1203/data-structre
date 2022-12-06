@@ -126,7 +126,12 @@ int TreeLeafSize(BTNode* root)
 //第k层节点个数
 int TreeKLevelSize(BTNode* root, int k)
 {
-
+	if (root == NULL)
+		return 0;
+	if (k == 1)
+		return 1;
+	k--;
+	return TreeKLevelSize(root->left, k) + TreeKLevelSize(root->right, k);
 }
 
 

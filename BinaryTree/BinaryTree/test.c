@@ -59,6 +59,7 @@ test3()
 	char a[] = "abc##de#g##f###";
 	int i = 0;
 	BTNode* temp = CreatTree(a, &i);
+	printf("%d\n", TreeKLevelSize(temp, 4));
 	printf("½»»»Ç°£º");
 	PrevOrder(temp);
 	ReChange(temp);
