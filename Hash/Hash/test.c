@@ -63,28 +63,82 @@
 
 //动态分配法
 //10000个数据，每个数据都在 -10^9 到 10^9 之间
+//#include<stdio.h>
+//#include<string.h>
+//#include<stdbool.h>
+//
+//#define N 20003   //一般要开两倍的空间
+//int h[N], null = 0x3f3f3f3f;  // null表示该位置没有数据
+//
+//bool find(int x)
+//{
+//	int k = (x % N + N) % N;
+//	while (h[k] != x && h[k] != null)  //必须满足找不到且该位置不为null，即该位置有数据但是不是x
+//	{
+//		k++;  // 找不到，那么下一个
+//		if (k == N) k = 0;  //如果到最后了，那么从开始找，因为不可能存在容量不够的问题
+//	}
+//	return k; // 找到了，退出循环返回位置，没找到，那么就返回应该放的位置
+//}
+//
+//
+//int main()
+//{
+//	memset(h, 0x3f, sizeof(h));
+//
+//
+//}
+
+
+//字符串哈希
+//用来比较两个字符串很有优势，很多情况下比KMP还要好用
 #include<stdio.h>
 #include<string.h>
-#include<stdbool.h>
 
-#define N 20003   //一般要开两倍的空间
-int h[N], null = 0x3f3f3f3f;  // null表示该位置没有数据
+#define N 10010
+#define P 131
+//哈希一般是P进制，P一般取 131 或者 13331
+//同时由于P进制太大了，所以要mod 一个数，这里一般是 2^64  ,但是如果直接用 unsigned long long 来计算，
+//其本身就是8个字节，64位，根据C语言中数据的存储规则，用它来存数据就 相当于mod 2^64
 
-bool find(int x)
+typedef unsigned long long ULL;
+char str[N];
+ULL h[N], p[N];
+//str[N] 存储字符串
+//h[N]表示字符串的所有前缀的哈希值
+//p[N]表示P的i次方
+
+int gets(int l, int r)
 {
-	int k = (x % N + N) % N;
-	while (h[k] != x && h[k] != null)  //必须满足找不到且该位置不为null，即该位置有数据但是不是x
-	{
-		k++;  // 找不到，那么下一个
-		if (k == N) k = 0;  //如果到最后了，那么从开始找，因为不可能存在容量不够的问题
-	}
-	return k; // 找到了，退出循环返回位置，没找到，那么就返回应该放的位置
+	return h[r] - h[l - 1] * p[r - l + 1];
 }
-
 
 int main()
 {
-	memset(h, 0x3f, sizeof(h));
+	int m, n;  // 字符串有m个数字，测试n次
+	scanf("%d%d%s", &m, &n, str + 1);
+	//从str+1 开始输入字符串，str位置的是0，这样一方面，h[0]=0，方便下面的循环里面初始化，
+	//另一方面也应题  （如果要求是字符串不是用下标来表示，比如"abcdef"  那么 h[1]="a",h[2]="ab"）
+	p[0] = 1;
+	for (int i = 1;i < N;i++)
+	{
+		h[i] = h[i - 1] * P + str[i]; //每一个字符的ascll码值来表示其对应的数字
+		p[i] = p[i - 1] * P;  //p[i]就是P的i次方
+	}
 
-
+	while (n--)
+	{
+		int l1, r1, l2, r2;
+		scanf("%d%d%d%d", &l1, &r1, &l2, &r2);
+		if (gets(l1, r1) == gets(l2, r2))
+		{
+			printf("Yes!\n");
+		}
+		else
+			printf("No!\n");
+	}
 }
+
+
+
+
