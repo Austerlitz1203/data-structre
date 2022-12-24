@@ -3,7 +3,7 @@
 #include<time.h>
 #include<stdlib.h>
 #include"stack.h"
-void Print(int *p,int n)
+void Print(int* p, int n)
 {
 	for (int i = 0;i < n;i++)
 		printf("%d ", p[i]);
@@ -36,9 +36,9 @@ void InsertSort(int* p, int n)
 
 //2、希尔排序
 //每次排序间隔gap个位置，这样大的数很快到后面
-void ShellSort(int *p,int n)
+void ShellSort(int* p, int n)
 {
-	int gap=n;
+	int gap = n;
 	while (gap > 1)
 	{
 		gap /= 2;//这样的好处是gap最后可以得到1
@@ -84,13 +84,13 @@ void Swap(int* x, int* y)
 //向下调整算法，时间复杂度 log2^N（2为敌，N代表元素个数）
 //此算法前提是，左子树和右子树都是堆
 //所以在排序的时候，不能直接使用向下调整算法，要从下往上使用此算法
-void AdjustDown(int* p,int size,int root)
+void AdjustDown(int* p, int size, int root)
 {
 	int parent = root;//父亲的下标，从root开始向下调整
 	int child = parent * 2 + 1;//孩子的下标
 	while (child < size)//child可以等于size-1，因为最后一个下标就是size-1
 	{
-		if ((child+1) <= size-1 && p[child + 1] > p[child])
+		if ((child + 1) <= size - 1 && p[child + 1] > p[child])
 		{
 			child += 1;//判断孩子节点哪个数据比较小
 		}
@@ -127,7 +127,7 @@ void AdjustDown(int* p,int size,int root)
 // 0的左子树依然是大堆，其右子树也依然是大堆结构，此时只需要一次向下调整算法就可以构成大堆
 // 然后依次循环
 //
-void HeapSort(int *p,int size)
+void HeapSort(int* p, int size)
 {
 	for (int i = (size - 1 - 1) / 2; i >= 0; i--)
 	{
@@ -206,7 +206,7 @@ int* GetMidIndex(int* a, int* left, int* right)
 	}
 }
 
-void QuickSort(int* p, int* left,int* right)
+void QuickSort(int* p, int* left, int* right)
 {
 	if (left > right)//递归终止条件
 	{
@@ -214,7 +214,7 @@ void QuickSort(int* p, int* left,int* right)
 	}
 	//用三数取中法要把取到的数和首元素交换
 	int* Index = GetMidIndex(p, left, right);
-	Swap(left,Index);
+	Swap(left, Index);
 
 	int* begin = left;
 	int* end = right;
@@ -223,7 +223,7 @@ void QuickSort(int* p, int* left,int* right)
 	while (begin < end)
 	{
 		while (begin < end && *end >= temp)
-		{                                  
+		{
 			end--;
 		}
 		*pit = *end;
@@ -252,7 +252,7 @@ void QuickSort(int* p, int* left,int* right)
 		QuickSort(p, pit + 1, right);
 	}
 	else
-		InsertSort(pit+1, right - pit - 1 + 1);//右区间开始插入排序
+		InsertSort(pit + 1, right - pit - 1 + 1);//右区间开始插入排序
 }
 //这种方法不需要像法2一样，最后left=right的时候去判断指向的那个值和*pit的大小关系，因为最后的情况下，指向的内容
 //本身就是一个坑， 坑里面的内容早就被复制到上一个坑了，所以直接把*pit放进去就好
@@ -326,7 +326,7 @@ void QuickSort3(int* p, int* left, int* right)
 	{
 		//只要cur指向的比*pit小，prev就会++，确保prev经过的都是比*pit小的
 		if (*cur < *pit //巧妙之处在于：6 8 2 3 0 ，prev指向6，cur指向8，此时*cur>*pit,那么&&左边就是0，不会执行右边，prev也就不会++
-			&& ++prev !=cur)//++prev==cur的情况下，那么就没有必要交换，因为两个一样
+			&& ++prev != cur)//++prev==cur的情况下，那么就没有必要交换，因为两个一样
 		{
 			Swap(prev, cur);
 		}
@@ -351,7 +351,7 @@ void QuickSort3(int* p, int* left, int* right)
 
 //归并排序 O(n*log2^n)
 //也是分治的思想
-void MergeSort(int *p,int left,int right,int *ret)
+void MergeSort(int* p, int left, int right, int* ret)
 {
 	if (left >= right)
 		return;
@@ -362,7 +362,7 @@ void MergeSort(int *p,int left,int right,int *ret)
 	MergeSort(p, mid + 1, right, ret);//既然递归了，就得有返回条件
 
 	//开始排序
-	int begin1 = left,  end1 = mid;
+	int begin1 = left, end1 = mid;
 	int begin2 = mid + 1, end2 = right;
 	int index = left;//index表示这次递归中要排序的开始数据的下标
 	while (begin1 <= end1 && begin2 <= end2)//两个都满足的情况下才进行排序
@@ -374,7 +374,7 @@ void MergeSort(int *p,int left,int right,int *ret)
 		else
 			ret[index++] = p[begin2++];
 	}
-    //有一组有剩余的情况	
+	//有一组有剩余的情况	
 	while (begin1 <= end1)
 	{
 		ret[index++] = p[begin1++];
@@ -397,8 +397,8 @@ void MergeSort(int *p,int left,int right,int *ret)
 //快排的非递归排序
 int PartSort(int* p, int left, int right)
 {
-	int *temp=GetMidIndex(p, p + left, p + right);
-	Swap(temp, p+left);//之前一直出错，就是这里交换的是p和temp，应该交换p+left，每次快排区间的第一个值
+	int* temp = GetMidIndex(p, p + left, p + right);
+	Swap(temp, p + left);//之前一直出错，就是这里交换的是p和temp，应该交换p+left，每次快排区间的第一个值
 
 	int begin = left;
 	int end = right;
@@ -426,11 +426,11 @@ int PartSort(int* p, int left, int right)
 	return pit;
 }
 
-void QuickSortNoR(int*p,int n)
+void QuickSortNoR(int* p, int n)
 {
 	ST st;
 	StackInit(&st);
-	StackPush(&st,n-1);
+	StackPush(&st, n - 1);
 	StackPush(&st, 0);
 
 	while (!StackEmpty(&st))
@@ -439,8 +439,8 @@ void QuickSortNoR(int*p,int n)
 		StackPop(&st);
 		int right = StackTop(&st);
 		StackPop(&st);
-		int KeyIndex=PartSort(p, left, right);//一方面，排序，另一方面，找到当此排序的那个数的位置
-		
+		int KeyIndex = PartSort(p, left, right);//一方面，排序，另一方面，找到当此排序的那个数的位置
+
 		//[left KeyIndex-1] KeyIndex [KeyIndex+1,right]
 
 		if (KeyIndex + 1 < right)
@@ -460,7 +460,7 @@ void QuickSortNoR(int*p,int n)
 //归并排序非递归
 void MergeSortNoR(int* p, int n)
 {
-	int* temp = (int*)malloc(sizeof(int)*n);
+	int* temp = (int*)malloc(sizeof(int) * n);
 	if (temp == NULL)
 	{
 		printf("malloc fail!");
@@ -473,12 +473,12 @@ void MergeSortNoR(int* p, int n)
 		for (int i = 0;i < n;i += 2 * gap)
 		{
 			// [i,i+gap-1] [i+gap,i+2*gap-1]  [i+2*gap ……
-			
-			int begin1 =  i,  end1 =  i + gap - 1;
+
+			int begin1 = i, end1 = i + gap - 1;
 			int begin2 = i + gap, end2 = i + 2 * gap - 1;
 
 			//右半区间不存在，这个时候前面都排完了，然后左半区间本来就是有序的，所以进行下一轮即可
-			if (begin2 >= n )
+			if (begin2 >= n)
 			{
 				break;
 			}
@@ -489,7 +489,7 @@ void MergeSortNoR(int* p, int n)
 			}
 			//左半区间不够gap个，这个不够gap区间的内容本来就是有序的，所以不用拷回去，直接拷贝到前一个end2的内容就可以
 			//必须要是拷贝到end2,因为上面几行end2可能被修正过，右半区间少了，不能拷贝到i+2*gap-1的内容
-			 
+
 			int index = i;//temp这个数组要存的内容的下标
 			//开始归并
 			while (begin1 <= end1 && begin2 <= end2)
@@ -564,7 +564,7 @@ void TestOP()
 	int end3 = clock();
 
 	int begin4 = clock();
-	QuickSort(a4, a4+0,a4+N-1);
+	QuickSort(a4, a4 + 0, a4 + N - 1);
 	int end4 = clock();
 
 	int begin5 = clock();
@@ -610,9 +610,34 @@ void TestOP()
 	free(a9);
 }
 
+
+void BubbleSort(int* p, int n)
+{
+	for (int i = 0;i < n - 1;i++)//冒泡次数，假设有4个数据，实际上冒泡好三个数据，剩下的就是最小的
+	{
+		int exchange = 0;
+
+		for (int j = 0;j < n - i - 1;j++) //看第一次冒泡，假设有4个数据，那么只需要到第三个即可，因为下面的逻辑是当前数据和下一个数据比较  
+		{
+			if (p[j] > p[j + 1])
+			{
+				Swap(&p[j], &p[j + 1]);
+				exchange = 1;
+			}
+		}
+		if (exchange == 0)
+			return;
+	}
+	return;
+}
+
 int main()
 {
-	TestOP();
+	int arr[10] = { 10,45,23,3,67,87,55,4,66,59 };
+	BubbleSort(arr, 10);
+	Print(arr, 10);
+
+	//TestOP();
 
 	//选择排序test
 	//int arr[10] = { 10,45,23,3,67,87,55,4,66,59 };
