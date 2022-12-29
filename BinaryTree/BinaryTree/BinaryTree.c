@@ -86,17 +86,19 @@ void LeafSort(BTNode* root)
 }
 
 //所有节点个数，三种方法
-//int LeafSize1(BTNode* root)
-//{
-//	static int size = 0;//全局变量
-//	if (!root)
-//		return;
-//	if (root)
-//		size++;
-//	LeafSize1(root->left);
-//	LeafSize1(root->right);
-//}//这种方法在多线程就不合适，所以避免使用，并且局部静态变量，虽然生命周期是全局，但是只能够在局部修改这个变量
- //不知道什么时候置成0，而且局部静态变量，只能初始化一次
+int LeafSize1(BTNode* root)
+{
+	static int size = 0;//全局变量
+	if (!root)
+		return;
+	if (root)
+		size++;
+	LeafSize1(root->left);
+	LeafSize1(root->right);
+	return size;
+}
+//这种方法在多线程就不合适，所以避免使用，并且局部静态变量，虽然生命周期是全局，但是只能够在局部修改这个变量
+//不知道什么时候置成0，而且局部静态变量，只能初始化一次
 
 void LeafSize2(BTNode* root, int* size)
 {
