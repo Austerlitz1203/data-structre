@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<time.h>
 #include<stdlib.h>
+#include<string.h>
 #include"stack.h"
 void Print(int* p, int n)
 {
@@ -631,11 +632,49 @@ void BubbleSort(int* p, int n)
 	return;
 }
 
+
+// 有局限性，只适合整形，范围集中的
+void CountSort(int* a, int n)
+{
+	int max = a[0], min = a[0];
+	for (int i = 0;i < n;i++)
+	{
+		if (a[i] > max) max = a[i];
+		if (a[i] < min) min = a[i];
+	}
+
+	int len = max - min + 1;
+	int* countA = (int*)calloc(len, sizeof(int));
+	if (!countA)
+	{
+		perror("calloc fail::");
+		exit(-1);
+	}
+
+	//统计次数
+	for (int i = 0;i < n;i++)
+	{
+		countA[a[i] - min]++; // 每一个数据映射到它减去最小值  a[i]-min 
+	}
+
+	// 写入原数组
+	int k = 0;
+	for (int i = 0;i < len;i++)
+	{
+		while (countA[i]--)
+		{
+			a[k++] = i + min;
+		}
+
+	}
+	free(countA);
+}
+
 int main()
 {
-	int arr[10] = { 10,45,23,3,67,87,55,4,66,59 };
-	BubbleSort(arr, 10);
-	Print(arr, 10);
+	//int arr[10] = { 10,45,23,3,67,87,55,4,66,59 };
+	//BubbleSort(arr, 10);
+	//Print(arr, 10);
 
 	//TestOP();
 
@@ -673,6 +712,12 @@ int main()
 	//int arr[] = { 3,5,2,7,8,6,1,9 ,4,5,11};
 	//MergeSortNoR(arr, 11);
 	//Print(arr, 11);
+
+	//计数排序
+	int arr[] = { 3,5,2,-7,8,-6,1,-9 ,4,-5,11 };
+	CountSort(arr, 11);
+	Print(arr, 11);
+
 
 	return 0;
 }
