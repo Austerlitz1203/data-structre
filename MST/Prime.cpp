@@ -7,7 +7,7 @@ using namespace std;
 const int N=510,INF=0x3f3f3f;
 int n,m;
 int g[N][N];
-int dist[N];
+int dist[N];// 存的是点到当前集合的距离
 bool st[N];
 
 //这个算法就和Dijkstra算法类似，只不过把源节点换成了集合
@@ -17,13 +17,13 @@ int prime()
 {
     memset(dist,0x3f,sizeof dist);
     dist[1]=0;
-    
+
     int ret=0;
     for(int i=1;i<=n;i++)
     {
         int t=-1;
         for(int j=1;j<=n;j++)
-        {
+        {    // 集合外 且  到集合距离最近的点
             if(!st[j] && (t==-1 || dist[j] < dist[t]))
               t=j;
         }
@@ -34,6 +34,7 @@ int prime()
         //为负数，那么肯定是取值自环，则结果就是错的。
 
         //更新，该点到原集合最短路  和  加入t点的新集合，该点到t点的最短路  之间取小的
+        // 第一个点进来之后，就开始更新了，和该点连通的dist[k]得到新的值。后面也不断更新
         for(int k=1;k<=n;k++) dist[k]=min(dist[k],g[t][k]);
 
         st[t]=true;
