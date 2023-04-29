@@ -15,7 +15,7 @@ class AVLTreeNode
 	int _bf; // balance factor  影响因子
 	
 	AVLTreeNode(const pair<K,V>& kv)
-		:_leftr(nullptr)
+		:_left(nullptr)
 		,_right(nullptr)
 		,_parent(nullptr)
 		,_bf(0)
@@ -90,6 +90,24 @@ public:
 			else if (parent->_bf == 2 || parent->_bf == -2)
 			{
 				// 旋转
+				if (parent->_bf == 2 && cur->_bf == 1)
+				{
+					RotateL(parent);
+				}
+				else if (parent->_bf == -2 && cur->_bf == -1)
+				{
+					RotateR(parent);
+				}
+				else if (parent->_bf == 2 && cur->_bf == -1)
+				{
+
+				}
+				else if (parent->_bf == -2 && cur->_bf == 1)
+				{
+
+				}
+				else
+					assert(false);
 
 				break;
 			}
@@ -102,6 +120,148 @@ public:
 
 		return true;
 	}
+
+private:
+
+	void RotateL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+
+		parent->_right = subRL;
+		subRL->_parent = parent;
+
+		Node* pparent = parent->_parent;
+		subR->_left = parent;
+		parent->_parent = subR;
+		
+		if (pparent == nullptr)
+		{
+			_root = subR;
+			_root->_parent = nullptr;
+		}
+		else
+		{
+			if (parent = pparent->_left)
+			{
+				pparent->_left = subR;
+			}
+			else
+			{
+				pparent->_right = subR;
+			}
+			subR->_parent = pparent;
+		}
+		parent->_bf = 0;
+		subR->_bf = 0;
+
+	}
+
+
+
+	void RotateR(Node* parent)
+	{
+		Node* subL = parent->_left;
+		Node* subLR = subL->_right;
+
+		Node* pparent = parent->_parent;
+		subL->_right = parent;
+		parent->_parent = subL;
+
+		parent->_left = subLR;
+		if (subLR)
+			subLR->_parent = parent;
+
+
+		if (pparent == nullptr)
+		{
+			subL->_parent = nullptr;
+			_root = subL;
+		}
+		else
+		{
+			if (parent = pparent->_left)
+			{
+				pparent->_left = subL;
+			}
+			else
+			{
+				pparent->_right = subL;
+			}
+
+			subL->_parent = pparent;
+		}
+
+		parent->_bf = 0;
+		subL->_bf = 0;
+	}
+
+	void RotateLR(Node* parent)
+	{
+		Node* subL = parent->_left;
+		Node* subLR = subL->_right;
+		int bf = subLR->_bf;
+
+		RotateL(parent->_left);
+		RotateR(parent);
+
+		if (bf == 1)
+		{
+			subL->_bf = -1;
+			subLR->_bf = 0;
+			parent->_bf = 0;
+		}
+		else if (bf == -1)
+		{
+			parent->_bf = 1;
+			subL->_bf = 0;
+			subLR->_bf = 0;
+		}
+		else if (bf == 0)
+		{
+			parent->_bf = 0;
+			subL->_bf = 0;
+			subLR->_bf = 0;
+		}
+		else
+		{
+			assert(false);
+		}
+	}
+
+
+	void RotateRL(Node* parent)
+	{
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+		int bf = subRL->_bf;
+
+		RotateR(parent->_right);
+		RotateL(parent);
+
+		if (bf == 1)
+		{
+			parent->_bf = 0;
+			subR->_bf = -1;
+			subRL->_bf = 0;
+		}
+		else if (bf == -1)
+		{
+			parent->_bf = 1;
+			subR->_bf = 0;
+			subRL->_bf = 0;
+		}
+		else if (bf == 0)
+		{
+			parent->_bf = 0;
+			subR->_bf = 0;
+			subRL->_bf = 0;
+		}
+		else
+			assert(false);
+
+	}
+
 
 private:
 	Node* _root;
